@@ -84,8 +84,8 @@ public class AutonomousOpMode extends LinearOpMode {
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         frontleftDrive.setDirection(DcMotor.Direction.REVERSE);
-        frontrightDrive.setDirection(DcMotor.Direction.FORWARD);
-        backrightDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontrightDrive.setDirection(DcMotor.Direction.REVERSE);
+        backrightDrive.setDirection(DcMotor.Direction.FORWARD);
         backleftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Send telemetry message to signify robot waiting;
@@ -97,7 +97,7 @@ public class AutonomousOpMode extends LinearOpMode {
 
         // Step through each leg of the path, ensuring that the OpMode has not been stopped along the way.
 
-        // Step 1:  Drive forward for 3 seconds
+        // Step 1:  Drive forward for 1 seconds
         frontleftDrive.setPower(FORWARD_SPEED);
         frontrightDrive.setPower(FORWARD_SPEED);
         backleftDrive.setPower(FORWARD_SPEED);

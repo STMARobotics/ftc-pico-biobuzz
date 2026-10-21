@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
@@ -80,7 +81,7 @@ public class MainOpMode extends LinearOpMode {
     private CRServo spindexer = null;
 
     // flywheel motor
-    private DcMotor flywheelMotor = null;
+    private DcMotorEx flywheelMotor = null;
 
     @Override
     public void runOpMode() {
@@ -97,7 +98,7 @@ public class MainOpMode extends LinearOpMode {
         spindexer = hardwareMap.get(CRServo.class,"spindexer");
 
         // initialize flywheel motor
-        flywheelMotor = hardwareMap.get(DcMotor.class, "fly_wheel_motor");
+        flywheelMotor = hardwareMap.get(DcMotorEx.class, "fly_wheel_motor");
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -111,8 +112,11 @@ public class MainOpMode extends LinearOpMode {
         // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
         frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        flywheelMotor.setVelocityPIDFCoefficients(1000, 0.1, 0, 0);
+
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -127,16 +131,17 @@ public class MainOpMode extends LinearOpMode {
             // if gamepad1.left_trigger_pressed then set the flywheel power to 1 else set power 0
             //DO NOT USE THIS CODE YET
 
-            if (gamepad1.left_trigger_pressed) {flywheelMotor.setPower(1);
-                spindexer.setPower(1);
+            if (gamepad1.left_trigger > 0.1) {flywheelMotor.setVelocity(2500*28/60);
+
+
 
             } else {flywheelMotor.setPower(0);
-                spindexer.setPower(0);
+
 
             }
             //make the intake spin
             if (gamepad1.right_trigger_pressed) {intakeMotor.setPower(1);
-                bumperwheelleft.setPower(1);
+                bumperwheelleft.setPower(-1);
                 bumperwheelright.setPower(1);
 
             } else {
@@ -146,6 +151,10 @@ public class MainOpMode extends LinearOpMode {
 
 
             }
+            if (Math.abs((flywheelMotor.getVelocity()/60*28)-2500) <= 100){
+                spindexer.setPower(1);
+            } else {spindexer.setPower(0);}
+
 
 
 
@@ -209,6 +218,7 @@ public class MainOpMode extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower, frontRightPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
+            telemetry.addData("flywheel rpm", flywheelMotor.getVelocity()/60*28);
             telemetry.update();
 
             // Try to make the fly wheel spin the entire time
