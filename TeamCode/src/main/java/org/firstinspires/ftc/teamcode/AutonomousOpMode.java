@@ -30,9 +30,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -59,13 +60,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 //@Disabled
 public class AutonomousOpMode extends LinearOpMode {
 
-    /* Declare OpMode members. */
-    private DcMotor frontleftDrive   = null;
-    private DcMotor frontrightDrive  = null;
-    private DcMotor backleftDrive    = null;
-    private DcMotor backrightDrive   = null;
-
-    private ElapsedTime     runtime = new ElapsedTime();
+    private final ElapsedTime     runtime = new ElapsedTime();
 
 
     static final double     FORWARD_SPEED = 0.6;
@@ -75,10 +70,13 @@ public class AutonomousOpMode extends LinearOpMode {
     public void runOpMode() {
 
         // Initialize the drive system variables.
-        frontleftDrive = hardwareMap.get(DcMotor.class, "front_left_drive");
-        backleftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
-        frontrightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
-        backrightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
+        /* Declare OpMode members. */
+        DcMotor frontleftDrive = hardwareMap.get(DcMotor.class, "front_left_drive");
+        DcMotor backleftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
+        DcMotor frontrightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
+        DcMotor backrightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
+        CRServo spindexer = hardwareMap.get(CRServo.class, "spindexer");
+        DcMotorEx flywheelMotor = hardwareMap.get(DcMotorEx.class, "fly_wheel_motor");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
@@ -104,10 +102,50 @@ public class AutonomousOpMode extends LinearOpMode {
         backrightDrive.setPower(FORWARD_SPEED);
 
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+        while (opModeIsActive() && (runtime.seconds() < 1)) {
             telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }
+        sleep(200);
+        frontleftDrive.setPower(TURN_SPEED);
+        frontrightDrive.setPower(-TURN_SPEED);
+        backleftDrive.setPower(TURN_SPEED);
+        backrightDrive.setPower(-TURN_SPEED);
+
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.5)) {
+            telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+        frontleftDrive.setPower(FORWARD_SPEED);
+        frontrightDrive.setPower(FORWARD_SPEED);
+        backleftDrive.setPower(FORWARD_SPEED);
+        backrightDrive.setPower(FORWARD_SPEED);
+        sleep(500);
+
+
+
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+        sleep(1000);
+
+       while (opModeIsActive()) {
+           flywheelMotor.setVelocity((2200.0 * 28.0) / 60.0);
+           spindexer.setPower(1);
+
+       }
+       sleep(10000);
+
+
+
+
+
+
+
+
 
         /* Step 2:  Spin right for 1.3 seconds
         frontleftDrive.setPower(TURN_SPEED);
@@ -123,7 +161,7 @@ public class AutonomousOpMode extends LinearOpMode {
          */
 
         // Step 3:  Drive Backward for 1 Second
-        frontrightDrive.setPower(-FORWARD_SPEED);
+       /* frontrightDrive.setPower(-FORWARD_SPEED);
         frontleftDrive.setPower(-FORWARD_SPEED);
         backrightDrive.setPower(-FORWARD_SPEED);
         backleftDrive.setPower(-FORWARD_SPEED);
@@ -132,7 +170,7 @@ public class AutonomousOpMode extends LinearOpMode {
         while (opModeIsActive() && (runtime.seconds() < 1.0)) {
             telemetry.addData("Path", "Leg 3: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
-        }
+        }*/
 
         // Step 4:  Stop
         frontleftDrive.setPower(0);
