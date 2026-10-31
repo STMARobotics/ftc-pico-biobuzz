@@ -210,6 +210,6 @@ public class AutonomousOpMode2 extends LinearOpMode {
             frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            sleep(250);   // optional pause after each move.
+            sleep(100);   // optional pause after each move.
         }
     }}
