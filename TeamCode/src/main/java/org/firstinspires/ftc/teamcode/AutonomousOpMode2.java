@@ -71,7 +71,7 @@ public class AutonomousOpMode2 extends LinearOpMode {
     private DcMotor frontRightDrive = null;
     private DcMotor backRightDrive = null;
 
-    private ElapsedTime     runtime = new ElapsedTime();
+    private final ElapsedTime     runtime = new ElapsedTime();
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
@@ -210,6 +210,6 @@ public class AutonomousOpMode2 extends LinearOpMode {
             frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            sleep(250);   // optional pause after each move.
+            sleep(50);   // optional pause after each move.
         }
     }}
